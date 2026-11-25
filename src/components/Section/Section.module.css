@@ -1,0 +1,48 @@
+.section {
+  margin-bottom: 72px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.center {
+  justify-content: center;
+  text-align: center;
+}
+
+.title {
+  color: var(--dark-gray-2);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.link {
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--tertiary);
+}
+
+@media (max-width: 600px) {
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .link {
+    font-size: 15px;
+  }
+}

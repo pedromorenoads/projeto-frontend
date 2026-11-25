@@ -1,0 +1,54 @@
+.hero {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
+.content {
+  padding-top: 56px;
+}
+
+.collections {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.collection {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 360 / 230;
+  background: var(--light-gray-3);
+  border-radius: 4px;
+}
+
+.collection img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.collection:hover img {
+  transform: scale(1.04);
+}
+
+@media (max-width: 900px) {
+  .content {
+    padding-top: 40px;
+  }
+
+  .collections {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 700px) {
+  .collections {
+    grid-template-columns: 1fr;
+  }
+
+  .collection {
+    aspect-ratio: 360 / 200;
+  }
+}

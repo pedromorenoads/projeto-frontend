@@ -1,0 +1,99 @@
+# Drip Store | Digital Store
+
+Projeto final do curso de Desenvolvimento Full Stack da Digital College. A aplicação reproduz a interface da Digital Store com React, React Router e CSS Modules, cobrindo as três páginas pedidas na documentação: home, listagem de produtos e visualização do produto.
+
+## Funcionalidades
+
+- Home com carrossel de destaques, coleções e os 8 produtos em alta.
+- Busca no cabeçalho, com redirecionamento para `/products?filter=...`.
+- Listagem com filtros por marca, categoria e gênero, ordenação por preço e contagem dinâmica de resultados.
+- Página de produto com galeria de imagens (setas e miniaturas), seleção de tamanho e cor, preço com desconto e produtos recomendados.
+- Layout compartilhado com `<Header />` e `<Footer />` em todas as páginas.
+- Menu com estado ativo, página 404 e telas de login, cadastro e pedidos para apoiar a navegação.
+
+## Tecnologias
+
+- React 18
+- React Router DOM 6
+- Vite 6
+- CSS Modules e CSS variables para os tokens de cor e tipografia
+- ESLint
+
+## Como rodar
+
+Pré-requisito: Node.js 18 ou superior.
+
+```bash
+npm install
+npm run dev
+```
+
+O projeto abre em `http://localhost:5173`.
+
+Outros scripts:
+
+```bash
+npm run build    # build de produção
+npm run preview  # pré-visualização do build
+npm run lint     # análise estática
+```
+
+## Rotas
+
+| Rota           | Página                                              |
+| -------------- | --------------------------------------------------- |
+| `/`            | Home                                                |
+| `/products`    | Listagem, aceita o parâmetro `?filter=`             |
+| `/product/:id` | Visualização do produto                             |
+| `/login`       | Entrar (interface sem integração com back-end)      |
+| `/register`    | Criar conta (interface sem integração com back-end) |
+| `/orders`      | Meus pedidos (estado vazio)                         |
+
+A rota `/produtos` também existe e redireciona para `/products`.
+
+## Estrutura
+
+```text
+src/
+├── assets/          # logos, ícones e setas em SVG
+├── components/
+│   ├── BuyBox/
+│   ├── FilterGroup/
+│   ├── Footer/
+│   ├── FooterInfo/
+│   ├── Gallery/
+│   ├── Header/
+│   ├── Logo/
+│   ├── ProductCard/
+│   ├── ProductListing/
+│   ├── ProductOptions/
+│   └── Section/
+├── data/
+│   └── products.js  # produtos, galerias e coleções
+├── pages/
+│   ├── AuthPage/
+│   ├── HomePage/
+│   ├── Layout/
+│   ├── NotFoundPage/
+│   ├── OrdersPage/
+│   ├── ProductListingPage/
+│   └── ProductViewPage/
+├── utils/
+├── App.jsx
+├── index.css
+└── main.jsx
+```
+
+## Sobre os dados
+
+Os produtos e as imagens ficam no próprio projeto (`src/data/products.js` e `public/`). O consumo de API era opcional na proposta, então a aplicação funciona sem back-end. Busca, filtros e ordenação são calculados no cliente.
+
+Os formulários de login e cadastro são apenas interface. O carrinho no cabeçalho segue o layout pedido e não possui fluxo de compra.
+
+## Deploy
+
+O projeto está pronto para Vercel ou Netlify. Os arquivos `vercel.json` e `public/_redirects` já configuram o redirecionamento das rotas para o `index.html`, evitando 404 ao atualizar uma página interna.
+
+## Autoria
+
+Projeto individual desenvolvido por Pedro.
