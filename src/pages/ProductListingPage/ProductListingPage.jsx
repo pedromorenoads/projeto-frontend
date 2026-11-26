@@ -1,13 +1,24 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import FilterGroup from '../../components/FilterGroup/FilterGroup.jsx'
 import ProductListing from '../../components/ProductListing/ProductListing.jsx'
 import Section from '../../components/Section/Section.jsx'
-import { fetchCategories, fetchProducts } from '../../services/api.js'
-import { mapCategories, mapProducts } from '../../services/productMapper.js'
+import products from '../../data/products.js'
 import { normalizeText } from '../../utils/normalizeText.js'
 import Layout from '../Layout/Layout.jsx'
 import styles from './ProductListingPage.module.css'
+
+const brandOptions = [...new Set(products.map((product) => product.brand))]
+  .sort()
+  .map((brand) => ({ text: brand, value: brand }))
+
+const categoryOptions = [...new Set(products.map((product) => product.category))]
+  .sort()
+  .map((category) => ({ text: category, value: category }))
+
+const genderOptions = [...new Set(products.map((product) => product.gender))]
+  .sort()
+  .map((gender) => ({ text: gender, value: gender }))
 
 function finalPrice(product) {
   return product.priceDiscount ?? product.price
@@ -19,70 +30,14 @@ function toggleValue(setter, value, checked) {
   )
 }
 
-function buildOptions(values) {
-  return [...new Set(values.filter(Boolean))]
-    .sort()
-    .map((value) => ({ text: value, value }))
-}
-
 function ProductListingPage() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [reloadKey, setReloadKey] = useState(0)
   const [selectedBrands, setSelectedBrands] = useState([])
   const [selectedCategories, setSelectedCategories] = useState([])
   const [selectedGenders, setSelectedGenders] = useState([])
   const [sort, setSort] = useState('')
 
   const searchTerm = searchParams.get('filter') ?? ''
-
-  useEffect(() => {
-    let active = true
-
-    setLoading(true)
-    setError('')
-
-    Promise.all([fetchProducts({ limit: -1 }), fetchCategories()])
-      .then(([productsResult, categoriesResult]) => {
-        if (!active) {
-          return
-        }
-
-        const categoriesById = mapCategories(categoriesResult.data)
-        setProducts(mapProducts(productsResult.data, categoriesById))
-      })
-      .catch((err) => {
-        if (active) {
-          setError(err.message)
-        }
-      })
-      .finally(() => {
-        if (active) {
-          setLoading(false)
-        }
-      })
-
-    return () => {
-      active = false
-    }
-  }, [reloadKey])
-
-  const brandOptions = useMemo(
-    () => buildOptions(products.map((product) => product.brand)),
-    [products],
-  )
-
-  const categoryOptions = useMemo(
-    () => buildOptions(products.map((product) => product.category)),
-    [products],
-  )
-
-  const genderOptions = useMemo(
-    () => buildOptions(products.map((product) => product.gender)),
-    [products],
-  )
 
   const filteredProducts = useMemo(() => {
     const term = normalizeText(searchTerm.trim())
@@ -113,7 +68,7 @@ function ProductListingPage() {
     }
 
     return result
-  }, [products, searchTerm, selectedBrands, selectedCategories, selectedGenders, sort])
+  }, [searchTerm, selectedBrands, selectedCategories, selectedGenders, sort])
 
   const hasFilters =
     Boolean(searchTerm.trim()) ||
@@ -206,36 +161,10 @@ function ProductListingPage() {
             </p>
           )}
 
-          <Section
-            title={
-              loading ? 'Carregando produtos...' : error ? 'Produtos' : resultsTitle
-            }
-            titleAlign="left"
-          >
-            {loading && <p className={styles.status}>Buscando produtos na API...</p>}
-
-            {!loading && error && (
-              <div className={styles.empty}>
-                <h3>Não foi possível carregar os produtos</h3>
-                <p>
-                  {error} Verifique se a API está rodando em{' '}
-                  {import.meta.env.VITE_API_URL || 'http://localhost:3000'}.
-                </p>
-                <button
-                  type="button"
-                  className={styles.emptyButton}
-                  onClick={() => setReloadKey((key) => key + 1)}
-                >
-                  Tentar novamente
-                </button>
-              </div>
-            )}
-
-            {!loading && !error && filteredProducts.length > 0 && (
+          <Section title={resultsTitle} titleAlign="left">
+            {filteredProducts.length > 0 ? (
               <ProductListing products={filteredProducts} />
-            )}
-
-            {!loading && !error && filteredProducts.length === 0 && (
+            ) : (
               <div className={styles.empty}>
                 <h3>Nenhum produto encontrado</h3>
                 <p>

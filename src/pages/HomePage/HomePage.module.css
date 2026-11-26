@@ -14,19 +14,6 @@
   gap: 24px;
 }
 
-.status {
-  padding: 32px 0;
-  color: var(--dark-gray-3);
-  font-size: 15px;
-}
-
-.error {
-  padding: 32px 0;
-  color: var(--primary);
-  font-size: 15px;
-  line-height: 1.6;
-}
-
 .collection {
   display: block;
   overflow: hidden;
