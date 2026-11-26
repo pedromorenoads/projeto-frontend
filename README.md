@@ -21,7 +21,7 @@ Projeto final do curso de Desenvolvimento Full Stack da Digital College. A aplic
 
 ## Como rodar
 
-Pré-requisito: Node.js 18 ou superior.
+Pré-requisitos: Node.js 18 ou superior e a API (`projeto-back-end`) rodando.
 
 ```bash
 npm install
@@ -29,6 +29,8 @@ npm run dev
 ```
 
 O projeto abre em `http://localhost:5173`.
+
+Por padrão o front consome a API em `http://localhost:3000`. Para apontar para outro endereço, copie `.env.example` para `.env` e ajuste `VITE_API_URL`.
 
 Outros scripts:
 
@@ -78,6 +80,9 @@ src/
 │   ├── OrdersPage/
 │   ├── ProductListingPage/
 │   └── ProductViewPage/
+├── services/
+│   ├── api.js           # cliente HTTP da Digital Store API
+│   └── productMapper.js # adapta a resposta da API para o formato da UI
 ├── utils/
 ├── App.jsx
 ├── index.css
@@ -86,9 +91,9 @@ src/
 
 ## Sobre os dados
 
-Os produtos e as imagens ficam no próprio projeto (`src/data/products.js` e `public/`). O consumo de API era opcional na proposta, então a aplicação funciona sem back-end. Busca, filtros e ordenação são calculados no cliente.
+Os produtos, categorias e imagens dos produtos vêm da API (`GET /v1/product` e `GET /v1/category`). As coleções e o carrossel da home continuam sendo imagens locais em `public/`.
 
-Os formulários de login e cadastro são apenas interface. O carrinho no cabeçalho segue o layout pedido e não possui fluxo de compra.
+Busca, filtros e ordenação são aplicados no cliente sobre os produtos retornados pela API. Os formulários de login/cadastro e a página de pedidos ainda são apenas interface.
 
 ## Deploy
 

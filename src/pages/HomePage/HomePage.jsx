@@ -1,13 +1,46 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Gallery from '../../components/Gallery/Gallery.jsx'
 import ProductListing from '../../components/ProductListing/ProductListing.jsx'
 import Section from '../../components/Section/Section.jsx'
-import { collections, heroImages, productsWithGallery } from '../../data/products.js'
+import { collections, heroImages } from '../../data/products.js'
+import { fetchProducts } from '../../services/api.js'
+import { mapProducts } from '../../services/productMapper.js'
 import Layout from '../Layout/Layout.jsx'
 import styles from './HomePage.module.css'
 
 function HomePage() {
-  const featuredProducts = productsWithGallery.slice(0, 8)
+  const [featuredProducts, setFeaturedProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let active = true
+
+    setLoading(true)
+    setError('')
+
+    fetchProducts({ limit: 8 })
+      .then((result) => {
+        if (active) {
+          setFeaturedProducts(mapProducts(result.data))
+        }
+      })
+      .catch((err) => {
+        if (active) {
+          setError(err.message)
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   return (
     <Layout>
@@ -45,7 +78,15 @@ function HomePage() {
           titleAlign="left"
           link={{ text: 'Ver todos', href: '/products' }}
         >
-          <ProductListing products={featuredProducts} />
+          {loading && <p className={styles.status}>Carregando produtos...</p>}
+
+          {!loading && error && (
+            <p className={styles.error}>
+              {error} Verifique se a API está rodando em {import.meta.env.VITE_API_URL || 'http://localhost:3000'}.
+            </p>
+          )}
+
+          {!loading && !error && <ProductListing products={featuredProducts} />}
         </Section>
       </div>
     </Layout>

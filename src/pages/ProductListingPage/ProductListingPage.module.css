@@ -89,6 +89,12 @@
   min-width: 0;
 }
 
+.status {
+  padding: 32px 0;
+  color: var(--dark-gray-3);
+  font-size: 15px;
+}
+
 .searchInfo {
   margin-bottom: 8px;
   color: var(--dark-gray-3);
